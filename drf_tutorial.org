@@ -1,0 +1,77 @@
+* Django REST Framework Tutorial
+** View
+   + takes a web request and returns a web response
+*** ~ModelViewSet~
+    + class-based view
+    + register with a router
+    + provides a set of default behaviours (CRUD)
+    #+BEGIN_SRC python
+      class UserViewSet(viewsets.ModelViewSet):
+          """
+          A viewset for viewing and editing user instances.
+          """
+          serializer_class = UserSerializer
+          queryset = User.objects.all()
+    #+END_SRC
+
+** Router
+   + determine how URLs be mapped to business logic
+*** ~Default Router~
+    + ~register(prefix, viewset)~ 
+    #+BEGIN_SRC python
+      router = routers.DefaultRouter()
+      router.register(r'users', UserViewSet)
+      router.register(r'accounts', AccountViewSet)
+
+      urlpatterns = [
+          url(r'^forgot-password/$', ForgotPasswordFormView.as_view()),
+      ]
+
+      urlpatterns += router.urls
+    #+END_SRC
+
+** Serializer
+   + convert queryset or model instance to native Python datatypes, serialize
+   + convert Python datatypes to model instance or queryset, deserialize
+*** ~ModelSerializer~
+    + automatically generate a set of fields based on model
+    + automatically generate validator
+    + include simple default implementation
+      #+BEGIN_SRC python
+        class AccountSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Account
+                fields = ('id', 'account_name', 'users', 'created')
+      #+END_SRC
+
+** Pagination
+*** Set Pagination Style
+    + global setting, most likely inside ~settings.py~
+    #+BEGIN_SRC python
+      REST_FRAMEWORK = {
+          'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+          'PAGE_SIZE': 100
+      }
+    #+END_SRC
+*** Modifying Pagination Style
+    + overrides the global setting
+    + set ~pagination_class~ inside ~ViewSet~
+    #+BEGIN_SRC python
+      class LargeResultsSetPagination(PageNumberPagination):
+          page_size = 1000
+          page_size_query_param = 'page_size'
+          max_page_size = 10000
+
+      class BillingRecordsView(generics.ModelViewSet):
+          queryset = Billing.objects.all()
+          serializer_class = BillingRecordsSerializer
+          pagination_class = LargeResultsSetPagination
+    #+END_SRC
+*** Pagination Style Options
+    + ~PageNumberPagination~
+    + ~LimitOffsetPagination~
+    + ~CursorPagination~
+
+** Filter
+** Exception
+** Permission
