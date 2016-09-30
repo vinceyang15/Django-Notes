@@ -193,3 +193,6 @@
      + ~ValidationError(detail)~
      + ~detail~ argument is mandatory
      + return "400"
+
+** Reference
+   1. http://www.django-rest-framework.org/
