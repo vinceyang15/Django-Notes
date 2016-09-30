@@ -5,30 +5,30 @@
     + class-based view
     + register with a router
     + provides a set of default behaviours (CRUD)
-    #+BEGIN_SRC python
-      class UserViewSet(viewsets.ModelViewSet):
-          """
-          A viewset for viewing and editing user instances.
-          """
-          serializer_class = UserSerializer
-          queryset = User.objects.all()
-    #+END_SRC
+      #+BEGIN_SRC python
+        class UserViewSet(viewsets.ModelViewSet):
+            """
+            A viewset for viewing and editing user instances.
+            """
+            serializer_class = UserSerializer
+            queryset = User.objects.all()
+      #+END_SRC
 
 ** Router
    + determine how URLs be mapped to business logic
 *** ~DefaultRouter~
     + ~register(prefix, viewset)~ 
-    #+BEGIN_SRC python
-      router = routers.DefaultRouter()
-      router.register(r'users', UserViewSet)
-      router.register(r'accounts', AccountViewSet)
+      #+BEGIN_SRC python
+        router = routers.DefaultRouter()
+        router.register(r'users', UserViewSet)
+        router.register(r'accounts', AccountViewSet)
 
-      urlpatterns = [
-          url(r'^forgot-password/$', ForgotPasswordFormView.as_view()),
-      ]
+        urlpatterns = [
+            url(r'^forgot-password/$', ForgotPasswordFormView.as_view()),
+        ]
 
-      urlpatterns += router.urls
-    #+END_SRC
+        urlpatterns += router.urls
+      #+END_SRC
 
 ** Serializer
    + convert queryset or model instance to native Python datatypes, serialize
